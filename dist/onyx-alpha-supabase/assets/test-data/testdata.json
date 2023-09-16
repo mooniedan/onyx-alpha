@@ -1,0 +1,154 @@
+{
+    "name": "Overview",
+    "subItems": [
+        {
+            "name": "Income",
+            "type": "Income",
+            "subItems": [
+                {
+                    "name": "Salary",
+                    "startValue": 30000,
+                    "type": "Income",
+                    "frequency": "year"
+                },
+                {
+                    "name": "Side hustle",
+                    "type": "Income"
+                }
+            ]
+        },
+        {
+            "name": "Expenditure",
+            "type": "Expenditure",
+            "subItems": [
+                {
+                    "name": "Rent",
+                    "startValue": 800,
+                    "type": "Expenditure",
+                    "endDate": "2040/1/1"
+                },
+                {
+                    "name": "Food",
+                    "type": "Expenditure",
+                    "startValue": 600
+                },
+                {
+                    "name": "Transport",
+                    "type": "Expenditure",
+                    "startValue": 100
+                },
+                {
+                    "name": "Bills",
+                    "type": "Expenditure",
+                    "subItems": [
+                        {
+                            "name": "Electricity",
+                            "type": "Expenditure",
+                            "startValue": 50
+                        },
+                        {
+                            "name": "Water",
+                            "type": "Expenditure",
+                            "startValue": 50
+                        },
+                        {
+                            "name": "Internet",
+                            "type": "Expenditure",
+                            "startValue": 50
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Savings & Assets",
+            "type": "Interest",
+            "subItems": [
+                {
+                    "name": "Savings",
+                    "type": "Interest",
+                    "startValue": 5000,
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Investments",
+                    "type": "Interest"
+                }
+            ]
+        },
+        {
+            
+            "name": "Debt",
+            "type": "Interest",
+            "subItems": [
+                {
+                    "name": "Credit Card",
+                    "type": "Interest",
+                    "startValue": -5000,
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 19
+                        }
+                    ]
+                },
+                {
+                    "name": "Loan",
+                    "type": "Interest",
+                    "startValue": -1000,
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 8
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Goals/Milestones",
+            "type": "Goal",
+            "subItems": [
+                {
+                    "name": "House",
+                    "type": "House",
+                    "inputs": [
+                        {
+                            "name": "Price",
+                            "value": 200000
+                        },
+                        {
+                            "name": "Purchase year",
+                            "value": 2040
+                        },
+                        {
+                            "name": "Years to purchase",
+                            "value": 5
+                        },
+                        {
+                            "name": "Deposit %",
+                            "value": 10
+                        },
+                        {
+                            "name": "Interest rate",
+                            "value": 5
+                        },
+                        {
+                            "name": "Mortgage term",
+                            "value": 25
+                        },
+                        {
+                            "name": "Deposit percentage",
+                            "value": 10
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

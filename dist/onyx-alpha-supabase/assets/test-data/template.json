@@ -1,0 +1,98 @@
+{
+    "name": "Overview",
+    "subItems": [
+        {
+            "name": "Income",
+            "type": "income",
+            "subItems": []
+        },
+        {
+            "name": "Expenditure",
+            "type": "expenditure",
+            "subItems": []
+        },
+        {
+            "name": "Savings & Assets",
+            "type": "interest",
+            "subItems": [
+                {
+                    "name": "Savings",
+                    "type": "interest",
+                    "startValue": 0,
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "Investments",
+                    "type": "interest"
+                }
+            ]
+        },
+        {
+            
+            "name": "Debt",
+            "type": "interest",
+            "subItems": [
+                {
+                    "name": "Credit Card",
+                    "type": "interest",
+                    "startValue": 0,
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "Investments",
+                    "type": "interest"
+                }
+            ]
+        },
+        {
+            "name": "Goals/Milestones",
+            "type": "goal",
+            "subItems": [
+                {
+                    "name": "House",
+                    "type": "house",
+                    "inputs": [
+                        {
+                            "name": "Price",
+                            "value": 0
+                        },
+                        {
+                            "name": "Purchase year",
+                            "value": 0
+                        },
+                        {
+                            "name": "Years to purchase",
+                            "value": 0
+                        },
+                        {
+                            "name": "Deposit %",
+                            "value": 10
+                        },
+                        {
+                            "name": "Interest rate",
+                            "value": 5
+                        },
+                        {
+                            "name": "Mortgage term",
+                            "value": 25
+                        },
+                        {
+                            "name": "Deposit percentage",
+                            "value": 10
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
