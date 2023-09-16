@@ -1,0 +1,202 @@
+{
+    "frequency": "month",
+    "name": "Overview",
+    "startDate": "2023-09-16T20:36:33.344Z",
+    "startValue": 0,
+    "subItems": [
+        {
+            "frequency": "month",
+            "name": "Income",
+            "startDate": "2023-09-16T20:36:33.344Z",
+            "startValue": 0,
+            "subItems": [
+                {
+                    "frequency": "year",
+                    "name": "Salary",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 30000,
+                    "type": "Income"
+                },
+                {
+                    "frequency": "month",
+                    "name": "Side hustle",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 0,
+                    "type": "Income"
+                }
+            ],
+            "type": "Income"
+        },
+        {
+            "frequency": "month",
+            "name": "Expenditure",
+            "startDate": "2023-09-16T20:36:33.344Z",
+            "startValue": 0,
+            "subItems": [
+                {
+                    "frequency": "month",
+                    "name": "Rent",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 800,
+                    "type": "Expenditure"
+                },
+                {
+                    "frequency": "month",
+                    "name": "Food",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 600,
+                    "type": "Expenditure"
+                },
+                {
+                    "frequency": "month",
+                    "name": "Transport",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 100,
+                    "type": "Expenditure"
+                },
+                {
+                    "frequency": "month",
+                    "name": "Bills",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 0,
+                    "subItems": [
+                        {
+                            "frequency": "month",
+                            "name": "Electricity",
+                            "startDate": "2023-09-16T20:36:33.344Z",
+                            "startValue": 50,
+                            "type": "Expenditure"
+                        },
+                        {
+                            "frequency": "month",
+                            "name": "Water",
+                            "startDate": "2023-09-16T20:36:33.344Z",
+                            "startValue": 50,
+                            "type": "Expenditure"
+                        },
+                        {
+                            "frequency": "month",
+                            "name": "Internet",
+                            "startDate": "2023-09-16T20:36:33.344Z",
+                            "startValue": 50,
+                            "type": "Expenditure"
+                        }
+                    ],
+                    "type": "Expenditure"
+                }
+            ],
+            "type": "Expenditure"
+        },
+        {
+            "frequency": "month",
+            "name": "Savings & Assets",
+            "startDate": "2023-09-16T20:36:33.344Z",
+            "startValue": 0,
+            "subItems": [
+                {
+                    "frequency": "month",
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 2
+                        }
+                    ],
+                    "name": "Savings",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 5000,
+                    "type": "Interest"
+                },
+                {
+                    "frequency": "month",
+                    "name": "Investments",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": 0,
+                    "type": "Interest"
+                }
+            ],
+            "type": "Interest"
+        },
+        {
+            "frequency": "month",
+            "name": "Debt",
+            "startDate": "2023-09-16T20:36:33.344Z",
+            "startValue": 0,
+            "subItems": [
+                {
+                    "frequency": "month",
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 19
+                        }
+                    ],
+                    "name": "Credit Card",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": -5000,
+                    "type": "Interest"
+                },
+                {
+                    "frequency": "month",
+                    "inputs": [
+                        {
+                            "name": "Interest rate",
+                            "value": 8
+                        }
+                    ],
+                    "name": "Loan",
+                    "startDate": "2023-09-16T20:36:33.344Z",
+                    "startValue": -1000,
+                    "type": "Interest"
+                }
+            ],
+            "type": "Interest"
+        },
+        {
+            "frequency": "month",
+            "name": "Goals/Milestones",
+            "startDate": "2023-09-16T20:36:33.345Z",
+            "startValue": 0,
+            "subItems": [
+                {
+                    "frequency": "month",
+                    "inputs": [
+                        {
+                            "name": "Price",
+                            "value": 200000
+                        },
+                        {
+                            "name": "Purchase year",
+                            "value": 2040
+                        },
+                        {
+                            "name": "Years to purchase",
+                            "value": 5
+                        },
+                        {
+                            "name": "Deposit %",
+                            "value": 10
+                        },
+                        {
+                            "name": "Interest rate",
+                            "value": 5
+                        },
+                        {
+                            "name": "Mortgage term",
+                            "value": 25
+                        },
+                        {
+                            "name": "Deposit percentage",
+                            "value": 10
+                        }
+                    ],
+                    "name": "House",
+                    "startDate": "2023-09-16T20:36:33.345Z",
+                    "startValue": 0,
+                    "type": "House"
+                }
+            ],
+            "type": "Goal"
+        }
+    ],
+    "type": "FinanceItem"
+}

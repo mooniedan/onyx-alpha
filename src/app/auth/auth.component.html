@@ -1,0 +1,41 @@
+<div class="row flex-center flex">
+    <div class="col-6 form-widget" aria-live="polite">
+        <h1 class="header">onyx</h1>
+        <mat-error>{{ error }}</mat-error>
+        <span><strong>{{ message }}</strong></span>
+        <mat-tab-group>
+            <mat-tab label="Sign in">
+                <form [formGroup]="signInForm" (ngSubmit)="signIn()" class="form-widget">
+                    <div>
+                        <label>Email</label>
+                        <input formControlName="email" class="inputField" type="email" placeholder="Your email" />
+                        <label>Password</label>
+                        <input formControlName="password" class="inputField" type="password" placeholder="*******" />
+                    </div>
+                    <div>
+                        <button type="submit" class="button block" [disabled]="loading">
+                            {{ loading ? 'Loading' : 'Log in' }}
+                        </button>
+                    </div>
+                </form>
+            </mat-tab>
+            <mat-tab label="Register">
+                <form [formGroup]="signUpForm" (ngSubmit)="signUp()" class="form-widget">
+                    <div>
+                        <label>Email</label>
+                        <input formControlName="email" class="inputField" type="email" placeholder="Your email" />
+                        <label>Enter a password</label>
+                        <input formControlName="password" class="inputField" type="password" placeholder="********" />
+                        <label>Verify password</label>
+                        <input formControlName="passwordRepeat" class="inputField" type="password" placeholder="********" />
+                    </div>
+                    <div>
+                        <button type="submit" class="button block" [disabled]="loading">
+                            {{ loading ? 'Loading' : 'Register' }}
+                        </button>
+                    </div>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

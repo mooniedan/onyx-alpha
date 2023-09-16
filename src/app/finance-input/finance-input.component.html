@@ -1,0 +1,12 @@
+<div>
+    <div>
+        <button mat-icon-button (click)="updateChart()"><mat-icon>refresh</mat-icon></button>
+        <div echarts [options]="chartOption" class="demo-chart"></div>
+    </div>
+    <app-data-input (dataChangedEmitter)="updateChart()" [dataItem]="overview">
+
+    </app-data-input>
+    <div class="horiz">
+        <button mat-raised-button color="primary" (click)="updateFinanceData()">Save</button>
+    </div>
+</div>

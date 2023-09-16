@@ -1,0 +1,23 @@
+.breadcrumb {
+    font-size: 20pt;
+    color: blue;
+    text-decoration-line: underline;
+    cursor: pointer;
+}
+
+.subItems {
+    display: flex;
+    flex-direction: column;
+}
+
+.horiz {
+    display: flex;
+    flex-direction: row;
+    column-gap: 8px;
+}
+
+.readonly {
+    display: inline-block;
+    width: 200px;
+    padding-left: 10px;
+}
