@@ -1,0 +1,23 @@
+<!-- <pre>{{ posts | json }}</pre> -->
+<div [class]="'vert'" *ngIf="creating">
+    <mat-form-field>
+        <mat-label>Subject</mat-label>
+        <input title="Subject" matInput [(ngModel)]="subject">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Message</mat-label>
+        <textarea title="Message" [(ngModel)]="message" matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+    <div class="horiz right-aligned">
+        <button mat-raised-button (click)="creating = false">Cancel</button>
+        <button mat-raised-button [disabled]="(subject.length === 0) && (message.length === 0)"
+            (click)="createPost()">Submit</button>
+    </div>
+</div>
+<div class="horiz right-aligned" *ngIf="!creating">
+    <button mat-raised-button (click)="creating = true">New Post</button>
+</div>
+<div *ngFor="let post of posts">
+    <app-post [post]="post" (dataChanged)="refreshData()"></app-post>
+</div>

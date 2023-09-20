@@ -71,14 +71,14 @@
                             "frequency": "month",
                             "name": "Water",
                             "startDate": "2023-09-16T20:36:33.344Z",
-                            "startValue": 50,
+                            "startValue": 60,
                             "type": "Expenditure"
                         },
                         {
                             "frequency": "month",
                             "name": "Internet",
                             "startDate": "2023-09-16T20:36:33.344Z",
-                            "startValue": 50,
+                            "startValue": 70,
                             "type": "Expenditure"
                         }
                     ],

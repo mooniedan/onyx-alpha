@@ -1,12 +1,17 @@
-<div>
+<div class="vert">
     <div>
         <button mat-icon-button (click)="updateChart()"><mat-icon>refresh</mat-icon></button>
         <div echarts [options]="chartOption" class="demo-chart"></div>
     </div>
+
+    <div class="horiz right-aligned">
+        <button mat-raised-button color="primary" (click)="updateFinanceData()">Save</button>
+    </div>
+
     <app-data-input (dataChangedEmitter)="updateChart()" [dataItem]="overview">
 
     </app-data-input>
-    <div class="horiz">
+    <div class="horiz right-aligned">
         <button mat-raised-button color="primary" (click)="updateFinanceData()">Save</button>
     </div>
 </div>

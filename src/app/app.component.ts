@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { SupabaseService } from './services/supabase.service'
+declare const gtag: Function;
 
 @Component({
   selector: 'app-root',

@@ -3,107 +3,296 @@
         (click)="editDetails(dataItem, breadcrumbs)">
         {{ dataItem.name }} {{ i < breadcrumbs.length -1 ? ' > ' : '' }} </a>
 </div>
-
 <h1>{{ dataItem.name }}
     <!-- <span *ngIf="breadcrumbs.length > 0">(£{{ dataItem.itemsStartTotal?.() }})</span> -->
     <span *ngIf="['Income','Expenditure'].includes(dataItem.type) && breadcrumbs.length > 0">(£{{
         dataItem.totalMonthlyValueSignal() | number: '1.2-2'}}) per month</span>
 </h1>
-
-<div [class]="'horiz'" *ngFor="let item of dataItem.subItems">
-    <div *ngIf="(item.type !== 'House') && (item.subItems.length === 0) ; else readonly" class="horiz">
-        <mat-icon>delete</mat-icon>
-        <mat-form-field>
-            <mat-label>Name</mat-label>
-            <input title="Name" matInput [(ngModel)]="item.name">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Amount</mat-label>
-            <input title="Amount" matInput (ngModelChange)="signalChanged($event, item.startValueSignal)"
-                [ngModel]="item.startValueSignal()">
-        </mat-form-field>
-        <div *ngIf="['Income', 'Expenditure'].includes(item.type)" class="horiz">
-            <span>per</span>
-            <mat-form-field>
-                <mat-label>Frequency</mat-label>
-                <mat-select [ngModel]="item.frequencySignal()"
-                    (ngModelChange)="signalChanged($event, item.frequencySignal)">
-                    <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
-                        {{frequency}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div *ngIf="['Goal'].includes(item.type)">
-            <mat-form-field>
-                <mat-label>Date</mat-label>
-                <mat-select [ngModel]="item.startDateSignal()"
-                    (ngModelChange)="signalChanged($event, item.startDateSignal)">
-                    <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
-                        {{frequency}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-    </div>
-    <ng-template #readonly>
-        <div class="vert">
-            <div class="horiz">
-                <h2>{{ item.name }}</h2>
+<div class="vert">
+    <div [class]="'horiz sub-item'" *ngFor="let item of dataItem.subItems"
+        [class.duplicate]="item.name.toLowerCase() === newItemName().toLowerCase()">
+        <div class="horiz">
+            <div class="horiz item-data">
+                <ng-container [ngSwitch]="item.type">
+                    <ng-container *ngSwitchCase="'Income'">
+                        <div class="vert">
+                            <h2>{{ item.name }}</h2>
+                            <div class="horiz">
+                                <ng-container *ngIf="item.subItems.length === 0; else readonly">
+                                    <mat-form-field>
+                                        <mat-label>{{ item.name }}</mat-label>
+                                        <input title="Amount" matInput type="number"
+                                            (ngModelChange)="signalChanged($event, item.startValueSignal)"
+                                            [ngModel]="item.startValueSignal()">
+                                    </mat-form-field>
+                                    <span>per</span>
+                                    <mat-form-field>
+                                        <mat-label>Frequency</mat-label>
+                                        <mat-select [ngModel]="item.frequencySignal()"
+                                            (ngModelChange)="signalChanged($event, item.frequencySignal)">
+                                            <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
+                                                {{frequency}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-template #readonly>
+                                    <div class="vert">
+                                        <span>{{ item.totalMonthlyValueSignal() | number: '1.2-2' }} per month</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'Expenditure'">
+                        <div class="vert">
+                            <h2>{{ item.name }}</h2>
+                            <div class="horiz">
+                                <ng-container *ngIf="item.subItems.length === 0; else readonly">
+                                    <mat-form-field>
+                                        <mat-label>{{ item.name }}</mat-label>
+                                        <input title="Amount" matInput type="number"
+                                            (ngModelChange)="signalChanged($event, item.startValueSignal)"
+                                            [ngModel]="item.startValueSignal()">
+                                    </mat-form-field>
+                                    <span>per</span>
+                                    <mat-form-field>
+                                        <mat-label>Frequency</mat-label>
+                                        <mat-select [ngModel]="item.frequencySignal()"
+                                            (ngModelChange)="signalChanged($event, item.frequencySignal)">
+                                            <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
+                                                {{frequency}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-template #readonly>
+                                    <div class="vert">
+                                        <span>{{ item.totalMonthlyValueSignal() | number: '1.2-2' }} per month</span>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <i *ngIf="breadcrumbs.length === 0">For this prototype, please include monthly debt
+                                payments in your total expenditure as well as the debt section.</i>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'Debt'">
+                        <ng-container *ngIf="item.subItems.length === 0; else readonly">
+                            <div class="vert">
+                                <h2>{{ item.name }}</h2>
+                                <mat-form-field>
+                                    <mat-label>{{ item.name }}</mat-label>
+                                    <input title="Amount" matInput type="number" type="number"
+                                        (ngModelChange)="signalChanged($event, item.startValueSignal)"
+                                        [ngModel]="item.startValueSignal()">
+                                </mat-form-field>
+                                <!-- <pre>{{ item | json }}</pre> -->
+                                <div [class]="'vert'" *ngFor="let input of item.inputs">
+                                    <mat-form-field *ngIf="!input.readonly else readonly">
+                                        <mat-label>{{ input.name }}</mat-label>
+                                        <input title="Amount" matInput (ngModelChange)="updateGraph($event)"
+                                            type="number" [(ngModel)]="input.value">
+                                    </mat-form-field>
+                                    <ng-template #readonly>
+                                        <div>{{ input.value }}</div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #readonly>
+                            <div class="vert">
+                                <h2>{{ item.name }}</h2>
+                                <span>{{ item.totalMonthlyValueSignal() | number: '1.2-2' }}</span>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'Savings'">
+                        <ng-container *ngIf="item.subItems.length === 0; else readonly">
+                            <div class="vert">
+                                <h2>{{ item.name }}</h2>
+                                <div class="horiz">
+                                    <mat-form-field>
+                                        <mat-label>{{ item.name }}</mat-label>
+                                        <input title="Amount" matInput type="number"
+                                            (ngModelChange)="signalChanged($event, item.startValueSignal)"
+                                            [ngModel]="item.startValueSignal()">
+                                    </mat-form-field>
+                                    <!-- <pre>{{ item | json }}</pre> -->
+                                    <div [class]="'vert'" *ngFor="let input of item.inputs">
+                                        <mat-form-field *ngIf="!input.readonly else readonly">
+                                            <mat-label>{{ input.name }}</mat-label>
+                                            <input title="Amount" matInput (ngModelChange)="updateGraph($event)"
+                                                type="number" [(ngModel)]="input.value">
+                                        </mat-form-field>
+                                        <ng-template #readonly>
+                                            <div>{{ input.value }}</div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #readonly>
+                            <div class="vert">
+                                <h2>{{ item.name }}</h2>
+                                <span>{{ item.totalMonthlyValueSignal() | number: '1.2-2' }}</span>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'Goal'">
+                        <ng-container *ngIf="item.subItems.length === 0; else readonly">
+                            <div class="vert">
+                                <h2>{{ item.name }}</h2>
+                                <div class="horiz">
+                                    <mat-form-field>
+                                        <mat-label>{{ item.name }}</mat-label>
+                                        <input title="Name" matInput
+                                            (ngModelChange)="signalChanged($event, item.startValueSignal)"
+                                            [ngModel]="item.startValueSignal()">
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Goal Date</mat-label>
+                                        <input title="Date" label="Date" matInput [matDatepicker]="picker"
+                                            (ngModelChange)="signalChanged($event, item.startDateSignal)"
+                                            [ngModel]="item.startDateSignal()">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #readonly>
+                            <div class="vert">
+                                <h2>{{ item.name }}</h2>
+                                <div class="horiz">
+                                    <button mat-raised-button *ngFor="let subItem of item.subItems"
+                                        (click)="editDetails(item, breadcrumbs)" color="primary"
+                                        aria-label="Enter more details">
+                                        {{ subItem.name}} - {{ subItem.startDateSignal() | date: 'MM/dd/yyyy' }}
+                                    </button>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'House'">
+                        <div [class]="'vert'" *ngFor="let input of item.inputs">
+                            <h2>{{ item.name }}</h2>
+                            <mat-form-field *ngIf="!input.readonly else readonly">
+                                <mat-label>{{ input.name }}</mat-label>
+                                <input title="Amount" matInput (ngModelChange)="updateGraph($event)" type="number"
+                                    [(ngModel)]="input.value">
+                            </mat-form-field>
+                            <ng-template #readonly>
+                                <h2>{{ input.name }}</h2>
+                                <div>{{ input.value }}</div>
+                            </ng-template>
+                        </div>
+                        <div *ngFor="let component of item.subItems">
+                            <span>{{ component.name }}</span>
+                            <button *ngIf="component.subItems?.length" (click)="editDetails(component, breadcrumbs)"
+                                mat-icon-button color="primary" aria-label="Enter more details">
+                                <mat-icon>open_in_new</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                        <mat-error>Unknown type</mat-error>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div>
                 <button mat-raised-button (click)="editDetails(item, breadcrumbs)" color="primary"
                     aria-label="Enter more details">
-                    Breakdown
+                    {{ item.subItems.length === 0 ? 'Break down' : 'View breakdown' }}
                 </button>
             </div>
-            <div [ngSwitch]="item.type">
-                <div *ngSwitchCase="'Goal'">
-                    <span *ngFor="let subItem of item.subItems">
-                        <button mat-raised-button (click)="editDetails(subItem, breadcrumbs)" color="primary"
-                            aria-label="Enter more details">
-                            {{ subItem.name }}
-                        </button>
-                    </span>
-                </div>
-                <div *ngSwitchCase="'House'">
-                    <span *ngFor="let subItem of item.subItems">
-                        <button mat-raised-button (click)="editDetails(item, breadcrumbs)" color="primary"
-                            aria-label="Enter more details">
-                            {{ subItem.name }}
-                        </button>
-                    </span>
-                </div>
-                <div class="subItems" *ngSwitchCase="'Interest'">
-                    <span *ngFor="let subItem of item.subItems">{{subItem.name}}: {{ subItem.startValueSignal() }}
-                    </span>
-                </div>
-                <span *ngSwitchDefault>{{ item.totalMonthlyValueSignal() }}
-                    per month</span>
+        </div>
+        <!-- <div *ngIf="(item.type !== 'House') && (item.subItems.length === 0) ; else readonly" class="horiz">
+            <mat-icon *ngIf="breadcrumbs.length > 0">delete</mat-icon>
+            <mat-form-field>
+                <mat-label>{{ item.name }}</mat-label>
+                <input title="Amount" matInput (ngModelChange)="signalChanged($event, item.startValueSignal)"
+                    [ngModel]="item.startValueSignal()">
+            </mat-form-field>
+            <div *ngIf="['Income', 'Expenditure'].includes(item.type)" class="horiz">
+                <span>per</span>
+                <mat-form-field>
+                    <mat-label>Frequency</mat-label>
+                    <mat-select [ngModel]="item.frequencySignal()"
+                        (ngModelChange)="signalChanged($event, item.frequencySignal)">
+                        <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
+                            {{frequency}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="['Goal'].includes(item.type)">
+                <mat-form-field>
+                    <mat-label>Date</mat-label>
+                    <mat-select [ngModel]="item.startDateSignal()"
+                        (ngModelChange)="signalChanged($event, item.startDateSignal)">
+                        <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
+                            {{frequency}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </div>
-    </ng-template>
-
-
-</div>
-<div *ngIf="dataItem.type === 'House'">
-    <div *ngFor="let input of dataItem.inputs">
-        <mat-form-field *ngIf="!input.readonly else readonly">
-            <mat-label>{{ input.name }}</mat-label>
-            <input title="Amount" matInput (ngModelChange)="updateGraph($event)" [(ngModel)]="input.value">
-        </mat-form-field>
         <ng-template #readonly>
-            <h2>{{ input.name }}</h2>
-            <div>{{ input.value }}</div>
-        </ng-template>
-    </div>
-    <div *ngFor="let component of dataItem.subItems">
-        <span>{{ component.name }}</span>
-        <button *ngIf="component.subItems?.length" (click)="editDetails(component, breadcrumbs)" mat-icon-button
-            color="primary" aria-label="Enter more details">
-            <mat-icon>open_in_new</mat-icon>
-        </button>
-    </div>
-</div>
+            <div class="vert">
+                <div class="horiz">
+                    <h2>{{ item.name }}</h2>
 
-<div *ngIf="breadcrumbs.length > 0">
-    <button mat-raised-button color="primary" (click)="addItem(dataItem)">Add Item</button>
+                </div>
+                <div [ngSwitch]="item.type">
+                    <div *ngSwitchCase="'Goal'">
+                        <span *ngFor="let subItem of item.subItems">
+                            <button mat-raised-button (click)="editDetails(subItem, breadcrumbs)" color="primary"
+                                aria-label="Enter more details">
+                                {{ subItem.name }}
+                            </button>
+                        </span>
+                    </div>
+                    <div *ngSwitchCase="'House'">
+                        <span *ngFor="let subItem of item.subItems">
+                            <button mat-raised-button (click)="editDetails(item, breadcrumbs)" color="primary"
+                                aria-label="Enter more details">
+                                {{ subItem.name }}
+                            </button>
+                        </span>
+                    </div>
+                    <div class="subItems" *ngSwitchCase="'Interest'">
+                        <span *ngFor="let subItem of item.subItems">{{subItem.name}}: {{ subItem.startValueSignal() |
+                            number: '1.2-2'}}
+                        </span>
+                    </div>
+                    <span *ngSwitchDefault>{{ item.totalMonthlyValueSignal() | number: '1.2-2' }}
+                        per month</span>
+                </div>
+            </div>
+        </ng-template> -->
+
+
+    </div>
+
+    <!-- <span *ngIf="duplicateName()">There is already an {{ dataItem.name}} with the name {{ newItemName()
+        }}. Consider giving your items different names to help differentiate.</span> -->
+    <div *ngIf="breadcrumbs.length > 0" class="horiz">
+        <mat-form-field>
+            <!-- <mat-label>Item name</mat-label>
+        <input title="Amount" matInput (ngModelChange)="signalChanged($event, newItemName, false)"
+            [ngModel]="newItemName()"> -->
+            <mat-label>Item Name</mat-label>
+            <input type="text" placeholder="Pick one" matInput [ngModel]="newItemName()"
+                (ngModelChange)="filterSuggestions.next($event); signalChanged($event, newItemName, false)"
+                [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredSuggestions | async" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="addItem(dataItem)" [disabled]="invalidItemName()">Add
+            Item</button>
+    </div>
 </div>

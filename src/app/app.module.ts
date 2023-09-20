@@ -16,16 +16,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatMenuModule } from '@angular/material/menu';
+import { TextFieldModule } from '@angular/cdk/text-field';
+
 
 import { NgxEchartsModule } from 'ngx-echarts';
 import { HttpClientModule } from '@angular/common/http';
+import { CommunityComponent } from './community/community.component';
+import { PostComponent } from './post/post.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
     FinanceInputComponent,
-    DataInputComponent
+    DataInputComponent,
+    CommunityComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +54,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
+    MatAutocompleteModule,
+    MatMenuModule,
+    TextFieldModule,
     FormsModule,
     HttpClientModule,
     NgxEchartsModule.forRoot({

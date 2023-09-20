@@ -2,16 +2,19 @@ import { WritableSignal, Signal, signal, computed, effect } from "@angular/core"
 import { Input } from "./input.model";
 import { Utils } from "../utils";
 import { Frequency } from "./frequency";
+import { GraphData } from "./graph-data.model";
+import { ItemType } from "./item-type";
 
 export class FinanceItem {
     name: string;
-    type: string = 'FinanceItem';
+    type: ItemType = 'Default';
     readonly startValueSignal = signal(0);
     readonly startDateSignal = signal(new Date());
     endDateSignal?: WritableSignal<Date> | undefined;
     subItems: FinanceItem[] = [];
     inputs?: Input[];
     frequencySignal: WritableSignal<Frequency> = signal('month');
+    subItemTrackerSignal = signal(0);
 
     subItemsStartTotal?: Signal<number> = computed(() => {
         let total = 0
@@ -34,17 +37,16 @@ export class FinanceItem {
             case 'year': return startValue / 12;
             case 'quarter': return startValue / 4;
             case '6 months': return startValue / 6;
-            case '4 weeks': return startValue * 12 / 52;
-            case '2 weeks': return startValue * 12 / 26;
-            case 'week': return startValue * 12 / 52;
-            case 'day': return startValue * 12 / 365;
+            case '4 weeks': return startValue * 13 / 12;
+            case '2 weeks': return startValue * 26 / 12;
+            case 'week': return startValue * 52 / 12;
             case 'month':
             default: return startValue;
         }
     })
 
     totalMonthlyValueSignal = computed(() => {
-        if (this.subItems.length > 0) {
+        if (this.subItemTrackerSignal() || this.subItems.length) {
             let subItemMonthlyValueTotal = 0;
             this.subItems.forEach((subItem) => {
                 subItemMonthlyValueTotal += Number(subItem.totalMonthlyValueSignal());
@@ -59,40 +61,38 @@ export class FinanceItem {
         return 0;
     }
 
-    valueOnDate(date: Date): number {
-        const endDate = this.endDateSignal?.();
-        // console.warn(endDate);
-        if (endDate && (endDate < date)) {
-            return 0;
-        }
-        const startDate = this.startDateSignal?.() || new Date();
-        const months = Utils.monthDiff(startDate, date)
-        // console.log(this.startDateSignal())
-        // console.log(date),
-        // console.log(months);
-        const monthlyAmount = this.monthlyValueSignal?.() || 0;
-        // console.log(this.name, this.type, months, startValue);
-        let total = monthlyAmount * months;
+    valuesOnDates(dates: Date[]): GraphData {
+        const graphData = new GraphData();
+        graphData.name = this.name;
+        const values: number[] = [];
+        dates.forEach((date) => {
+            const endDate = this.endDateSignal?.();
+            if (endDate && (endDate < date)) {
+                values.push(0);
+            } else {
+                const startDate = this.startDateSignal?.() || new Date();
+                const months = Utils.monthDiff(startDate, date)
+                const monthlyAmount = this.monthlyValueSignal?.() || 0;
+                let total = monthlyAmount * months;
+                values.push(total);
+            }
+        });
         if (this.subItems.length > 0) {
             this.subItems.forEach((subItem) => {
-                // console.log(this.name, subItem.name, subItem.type, subItem.valueOnDate(date), subItem);
-                total += Number(subItem.valueOnDate(date));
+                graphData.subItemGraphData.push(subItem.valuesOnDates(dates));
             })
-            return total
         }
-        // console.warn('FinanceItem', this.name, total);
-        return total;
+        graphData.xAxisValues = dates;
+        graphData.yAxisValues = values;
+        return graphData;
     }
 
     constructor(name: string, startDate: Date, startValue: number) {
-        // console.error('constructor', name, startDate, startValue);
         this.name = name;
         startDate = startDate ? startDate : new Date();
         this.startDateSignal.set(startDate)
         startValue = startValue ? startValue : 0;
         this.startValueSignal.set(startValue)
-        // console.warn('constructor', name, startDate, startValue);
-
     }
 
     toJson(): any {
@@ -110,7 +110,7 @@ export class FinanceItem {
                 json.subItems.push(subItem.toJson());
             })
         }
-        if (this.inputs && (this.inputs.length > 0)){
+        if (this.inputs && (this.inputs.length > 0)) {
             json.inputs = this.inputs;
         }
         return json;

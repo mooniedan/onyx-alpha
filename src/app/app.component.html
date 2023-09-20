@@ -1,9 +1,31 @@
-<div class="container" style="padding: 50px 0 100px 0">
-  <div *ngIf="session; else auth">
-    <button mat-raised-button (click)="signOut()">Sign out</button>
-    <app-finance-input [session]="session"></app-finance-input>
+<div class="vert" *ngIf="session; else auth">
+  <header id="header" class="horiz right-aligned">
+    <div class="menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/">Overview</button>
+        <button mat-menu-item routerLink="/community">Community</button>
+        <button mat-menu-item (click)="signOut()">Sign out</button>
+      </mat-menu>
+    </div>
+  </header>
+  <div class="container" style="padding: 50px 0 100px 0">
+
+    <!-- <app-finance-input [session]="session"></app-finance-input> -->
+    <router-outlet></router-outlet>
+
   </div>
-  <ng-template #auth>
-    <app-auth></app-auth>
-  </ng-template>
+  <footer>
+    <button title="Overview" mat-mini-fab color="primary" routerLink="/">
+      <mat-icon>dashboard</mat-icon>
+    </button>
+    <button title="Community" mat-mini-fab color="primary" routerLink="/community">
+      <mat-icon>forum</mat-icon>
+    </button>
+  </footer>
 </div>
+<ng-template #auth>
+  <app-auth></app-auth>
+</ng-template>

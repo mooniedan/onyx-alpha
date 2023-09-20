@@ -1,0 +1,67 @@
+{
+  "Income": [
+    "Salary",
+    "Bonus",
+    "Side Hustle"
+  ],
+  "Expenditure": [
+    "Bills",
+    "Groceries",
+    "Eating Out",
+    "Entertainment",
+    "Clothes",
+    "Gifts",
+    "Holidays",
+    "Car",
+    "Fuel",
+    "Parking",
+    "Prescriptions",
+    "Health",
+    "Hair", 
+    "Gym",
+    "Subscriptions"
+  ],
+  "Bills": [
+    "Mortgage payment",
+    "Rent",
+    "Building Insurance",
+    "Home Insurance",
+    "Gas",
+    "Electricity",
+    "Water",
+    "Council Tax",
+    "TV Licence",
+    "Phone",
+    "Internet",
+    "Mobile",
+    "Car Insurance",
+    "Home Phone"
+  ],
+  "Savings & Assets": [
+    "Savings",
+    "Investments",
+    "Pension",
+    "ISA",
+    "Shares",
+    "Bonds",
+    "Property",
+    "Car",
+    "Jewellery",
+    "Art",
+    "Other"
+  ],
+  "Debt": [
+    "Mortgage",
+    "Credit Card",
+    "Loan",
+    "Overdraft",
+    "Student Loan",
+    "Other"
+  ],
+  "Goals/Milestones": [
+    "Holiday",
+    "New Car",
+    "New House",
+    "Retirement"
+  ]
+}

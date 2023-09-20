@@ -1,0 +1,25 @@
+<div [class]="'horiz'" *ngIf="post.subject"><h2> {{ post.subject}}</h2></div>
+<div>({{ post.id }}) {{ post.message }} </div>
+
+<div class="horiz">
+    <!-- <span>My vote: {{ userVote }}</span> -->
+    <mat-icon class="link" [color]="userVote === 1 ? 'primary' : 'none'" (click)="submitVote(1)">thumb_up</mat-icon>
+    <strong>{{ post.score }}</strong>
+    <mat-icon class="link"  [color]="userVote === -1 ? 'primary' : 'none'"(click)="submitVote(-1)">thumb_down</mat-icon>
+    <span class="link" (click)="responding = !responding">Respond</span>
+</div>
+<div [class]="'vert'" *ngIf="responding">
+    <mat-form-field>
+        <mat-label>Message</mat-label>
+        <textarea title="Message" [(ngModel)]="message" matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+    <div class="horiz right-aligned">
+        <button mat-raised-button [disabled]="message === ''" (click)="submitResponse()">Submit</button>
+    </div>
+</div>
+<ng-container *ngFor="let response of post.responses">
+    <div class="response">
+        <app-post [post]="response" (dataChanged)="dataChanged.emit()"></app-post>
+    </div>
+</ng-container>

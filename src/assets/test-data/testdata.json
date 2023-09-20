@@ -13,7 +13,9 @@
                 },
                 {
                     "name": "Side hustle",
-                    "type": "Income"
+                    "type": "Income",
+                    "startValue": 500,
+                    "frequency": "year"
                 }
             ]
         },
@@ -89,22 +91,22 @@
                 {
                     "name": "Credit Card",
                     "type": "Interest",
-                    "startValue": -5000,
+                    "startValue": 5000,
                     "inputs": [
                         {
                             "name": "Interest rate",
-                            "value": 19
+                            "value": 0
                         }
                     ]
                 },
                 {
                     "name": "Loan",
                     "type": "Interest",
-                    "startValue": -1000,
+                    "startValue": 1000,
                     "inputs": [
                         {
                             "name": "Interest rate",
-                            "value": 8
+                            "value": 0
                         }
                     ]
                 }
@@ -147,6 +149,12 @@
                             "value": 10
                         }
                     ]
+                },
+                {
+                    "name": "Holiday",
+                    "type": "Goal",
+                    "startDate": "2030/1/1",
+                    "startValue": 10000
                 }
             ]
         }
