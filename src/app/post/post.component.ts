@@ -13,25 +13,20 @@ export class PostComponent implements OnInit {
   @Output() dataChanged = new EventEmitter<void>();
   responding = false;
   message = '';
-  user: any;
+  user = this.supabase.user;
   userVote: number = 0
+  expandedResponses: number[] = [];
 
 
   session!: AuthSession;
-  constructor(private readonly supabase: SupabaseService) {
+  constructor(public readonly supabase: SupabaseService) {
     if (this.supabase.session) {
       this.session = this.supabase.session
     }
   }
 
   async ngOnInit(): Promise<void> {
-    this.supabase.authChanges((_, session) => {
-      if (session)
-        this.session = session
-    })
 
-    const { user } = this.session
-    this.user = user;
     // console.log(this.post);
     this.post?.votes?.every((vote) => {
       // console.log(this.user.id)
@@ -42,6 +37,14 @@ export class PostComponent implements OnInit {
       }
       return true;
     });
+  }
+
+  toggleResponse(id: number) {
+    if (this.expandedResponses.includes(id)) {
+      this.expandedResponses.splice(this.expandedResponses.indexOf(id), 1);
+    } else {
+      this.expandedResponses.push(id);
+    }
   }
 
   async submitResponse() {

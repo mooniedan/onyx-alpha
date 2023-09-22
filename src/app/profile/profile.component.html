@@ -1,0 +1,35 @@
+<h1>Profile</h1>
+<form class="vert">
+    <mat-form-field>
+        <mat-label>Username (To be used in the community)</mat-label>
+        <input title="username" name="username" matInput type="text" [(ngModel)]="profile.username">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Location</mat-label>
+        <input title="location" name="location" matInput type="" [(ngModel)]="profile.location">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Year of birth</mat-label>
+        <input title="year_of_birth" name="year_of_birth" matInput type="number" [(ngModel)]="profile.year_of_birth">
+    </mat-form-field> <mat-form-field>
+        <mat-label>Dependents</mat-label>
+        <input title="dependents" name="dependents" matInput type="number" [(ngModel)]="profile.dependents">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Marital Status</mat-label>
+        <mat-select name="marital_status" [(ngModel)]="profile.marital_status">
+            <mat-option *ngFor="let status of ['married', 'common-law', 'separated', 'divorced', 'widowed',  'single']"
+                [value]="status">
+                {{ status }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <h1>Interests</h1>
+    <div class="horiz wrap">
+        <button [color]="interests.includes(tag) ? 'primary' : 'none'" *ngFor="let tag of availableTags"
+            mat-raised-button (click)="toggleIsTag(tag)">{{ tag }}</button>
+    </div>
+    <div class="horiz right-aligned">
+        <button mat-raised-button (click)="updateProfile()">{{ profile.id ? 'Update' : 'Create'}} Profile</button>
+    </div>
+</form>

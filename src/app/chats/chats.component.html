@@ -1,0 +1,41 @@
+<h1>Chats</h1>
+<!-- Active
+<pre>{{ activeChat | json }}</pre>
+Chats
+<pre>{{ chats | json }}</pre> -->
+
+
+<div class="vert" *ngIf="activeChat; else list">
+    <div class="horiz">
+        <button mat-icon-button (click)="activeChat = null"><mat-icon>arrow_back</mat-icon></button>
+        <h1>{{ activeChat.other_username }}</h1>
+    </div>
+    <div class="messages vert">
+        <div [class]="'horiz'" [class.right-aligned]="message.sender_user_id === supabase.user.id"
+            *ngFor="let message of activeChat.messages  | orderBy:'id':'asc'">
+            <div class="message" [class.incoming]="message.sender_user_id !== supabase.user.id">{{ message.id }} {{
+                message.message}}</div>
+        </div>
+    </div>
+    <div [class]="'vert'">
+        <mat-form-field>
+            <mat-label>Message</mat-label>
+            <textarea title="Message" [(ngModel)]="message" matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+
+        <div class="horiz right-aligned">
+            <button mat-raised-button [disabled]="message === ''" (click)="submitResponse()">Submit</button>
+        </div>
+    </div>
+</div>
+<ng-template #list>
+    <span *ngIf="chats.length === 0; else converstaions">You haven't strated chatting yet, you can click on a name in the <a routerLink="/community">community</a> to start a converstaion.</span>
+    <ng-template #converstaions>
+    <div [class]="'chat'" *ngFor="let chat of chats">
+        <a class="link" (click)="activateChat(chat)">{{ chat.other_username }} {{ chat.unread > 0 ? '('+chat.unread+')'
+            :
+            '' }}</a>
+    </div>
+</ng-template>
+</ng-template>

@@ -7,22 +7,33 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/">Overview</button>
         <button mat-menu-item routerLink="/community">Community</button>
+        <button mat-menu-item routerLink="/chats">Chat</button>
+        <button mat-menu-item routerLink="/feature-requests">Request Features</button>
+        <button mat-menu-item routerLink="/profile">Profile</button>
         <button mat-menu-item (click)="signOut()">Sign out</button>
       </mat-menu>
     </div>
   </header>
   <div class="container" style="padding: 50px 0 100px 0">
 
-    <!-- <app-finance-input [session]="session"></app-finance-input> -->
     <router-outlet></router-outlet>
 
   </div>
   <footer>
-    <button title="Overview" mat-mini-fab color="primary" routerLink="/">
+    <button mat-mini-fab color="primary" routerLink="/">
       <mat-icon>dashboard</mat-icon>
     </button>
-    <button title="Community" mat-mini-fab color="primary" routerLink="/community">
+    <button mat-mini-fab color="primary" routerLink="/community">
       <mat-icon>forum</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" routerLink="/chats">
+      <mat-icon>chat</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" routerLink="/feature-requests">
+      <mat-icon>lightbulb</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" routerLink="/profile">
+      <mat-icon>account_circle</mat-icon>
     </button>
   </footer>
 </div>

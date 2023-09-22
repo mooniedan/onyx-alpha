@@ -9,6 +9,9 @@ import {
 } from '@supabase/supabase-js'
 import { environment } from 'src/environments/environment'
 import { Post } from '../community/community.component';
+import { Profile } from '../profile/profile.component';
+import { Chat, ChatMessage } from '../chats/chats.component';
+import { FeatureRequest } from '../feature-requests/feature-requests.component';
 
 export interface FinanceData {
   id: number;
@@ -22,9 +25,20 @@ export interface FinanceData {
 export class SupabaseService {
   private supabase: SupabaseClient
   _session: AuthSession | null = null
+  profile: Profile = new Profile();
+  user!: User;
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+    this.authChanges((_, session) => {
+      if (session) {
+        console.warn('refreshing session')
+        this._session = session;
+        const { user } = this._session
+        this.user = user;
+        this.refreshProfile();
+      }
+    })
   }
 
   get session() {
@@ -32,6 +46,34 @@ export class SupabaseService {
       this._session = data.session
     })
     return this._session
+  }
+
+  async refreshProfile() {
+    return new Promise(async (resolve, reject) => {
+      console.log(this.user);
+      if (this.user) {
+        this.profile.user_id = this.user.id;
+        try {
+          const { data, error } = await this.getProfile(this.user.id)
+          if (error) {
+            console.error(error);
+            reject(error);
+          }
+          if (data) {
+            console.warn(data);
+            this.profile = data;
+            resolve(data);
+          }
+        } catch (error) {
+          console.error(error);
+          reject(error);
+        }
+      }
+      else {
+        console.error('error getting profile');
+        reject();
+      }
+    });
   }
 
   getFinanceData(userId: string) {
@@ -48,15 +90,20 @@ export class SupabaseService {
   }
 
   getPosts(): any {
-    // return this.supabase.from('posts').select('*')
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve({ data: mockPosts });
-    //   });
-    // });
+
     return this.supabase
       .from('posts')
-      .select(`id, user_id, thread_id,  parent_id, posted_at, subject, message, tags, votes`)
+      .select(
+        `id, 
+        profiles(username),
+        user_id, 
+        thread_id, 
+        parent_id, 
+        posted_at, 
+        subject, 
+        message, 
+        tags, 
+        votes`)
   }
 
   createPost(post: Post): any {
@@ -64,12 +111,92 @@ export class SupabaseService {
   }
 
   updatePost(post: Post): any {
-    post.message = 'updated';
-    console.log('upsert', post);
-    console.log(post.toJson());
     return this.supabase.from('posts').
-      update(post.toJson())
+      update({ votes: post.votes})
       .eq('id', post.id)
+  }
+
+  getProfile(userId: string) {
+    return this.supabase
+      .from('profiles')
+      .select(`id, user_id, created_at, location, year_of_birth, dependents, marital_status, username, interests`)
+      .eq('user_id', userId)
+      .single()
+  }
+
+  createProfile(profile: Profile) {
+    console.log('upsert', profile);
+    return this.supabase.from('profiles').upsert(profile)
+  }
+
+  updateProfile(profile: Profile) {
+    return this.supabase.from('profiles').
+      update(profile)
+      .eq('user_id', profile.user_id)
+  }
+
+  getFeatureRequests() {
+    return this.supabase
+      .from('features')
+      .select(
+        `id, 
+        suggested_at
+        user_id, 
+        feature, 
+        votes`)
+  }
+
+  createFeatureRequest(featureRequest: FeatureRequest) { 
+    console.log('upsert', featureRequest);
+  return this.supabase.from('features').upsert(featureRequest)
+  }
+
+  updateFeatureVotes(featureRequest: FeatureRequest) {
+    return this.supabase.from('features').
+    update({ votes: featureRequest.votes})
+    .eq('id', featureRequest.id)
+  }
+
+  getChats() {
+    return this.supabase
+      .from('messages')
+      .select(`id, 
+      created_at, 
+      thread_id, 
+      message, 
+      read, 
+      sender_user_id,
+      recipient_user_id
+    `)
+      // .or(`sender_user_id.eq('${this.user.id}'), recipient_user_id.eq('${this.user.id}')`)
+      // .or('sender_user_id.eq(abc), recipient_user_id.eq(abc)');
+      .or(`sender_user_id.eq.${this.user.id},recipient_user_id.eq.${this.user.id}`);
+    // aea346eb-b854-456d-b74a-264cd5de7755
+  }
+
+  updateRead(chat: Chat) {
+    return this.supabase.from('messages').
+      update({ read: true })
+      .eq('thread_id', chat.threadId)
+      .eq('recipient_user_id', this.user.id)
+  }
+
+
+  // createChatMessage(message: string, chat?: Chat) {
+  //   const sender_id = this.user.id;
+  //   const recepient_id = this.user.id === chat?.userIds[0] ? chat?.userIds[1] : chat?.userIds[0];
+  //   const messageItem: any = {
+  //     message: message,
+  //     sender_user_id: sender_id,
+  //     recepient_user_id: recepient_id,
+  //   }
+  //   if (chat?.threadId) {
+  //     messageItem.thread_id = chat.threadId;
+  //   }
+  //   return this.supabase.from('messages').upsert(messageItem)
+  createChatMessage(chatMessage: ChatMessage) {
+    return this.supabase.from('messages').upsert(chatMessage)
+
   }
 
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
@@ -113,10 +240,10 @@ create table
     tags - text,
     votes jsonb,
   );
-
+ 
   alter table posts
   enable row level security;
-
+ 
   create policy "Public profiles are viewable by everyone." on posts
   for select using (true);
 */

@@ -1,23 +1,41 @@
-<!-- <pre>{{ posts | json }}</pre> -->
-<div [class]="'vert'" *ngIf="creating">
-    <mat-form-field>
-        <mat-label>Subject</mat-label>
-        <input title="Subject" matInput [(ngModel)]="subject">
-    </mat-form-field>
-    <mat-form-field>
+<!-- <pre>{{ posts | json }}</pre>
+<pre>{{ supabase.profile | json }}</pre>
+<span>{{ postsLoading }}</span> - <span> {{ profileLoading }} </span> -->
+<h1>Discussion</h1>
+<div *ngIf="supabase.profile?.username; else profile">
+
+    <div [class]="'vert'" *ngIf="creating">
+        You are messaging as {{ supabase.profile.username }}
+        <mat-form-field>
+            <mat-label>Subject</mat-label>
+            <input title="Subject" matInput [(ngModel)]="subject">
+        </mat-form-field>
+        <!-- <mat-form-field>
         <mat-label>Message</mat-label>
         <textarea title="Message" [(ngModel)]="message" matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
             cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
-    </mat-form-field>
-    <div class="horiz right-aligned">
-        <button mat-raised-button (click)="creating = false">Cancel</button>
-        <button mat-raised-button [disabled]="(subject.length === 0) && (message.length === 0)"
-            (click)="createPost()">Submit</button>
+    </mat-form-field> -->
+        <editor apiKey="yxwo97qslfdvsaa953bcgdmkgh7picrh273myks0kr8761al" [(ngModel)]="message"></editor>
+        <div class="horiz wrap">
+            <button [color]="tags.includes(tag) ? 'primary' : 'none'" *ngFor="let tag of availableTags" mat-raised-button (click)="toggleIsTag(tag)">{{ tag }}</button>
+        </div>
+        <div class="horiz right-aligned">
+            <button mat-raised-button (click)="creating = false">Cancel</button>
+            <button mat-raised-button [disabled]="(subject.length === 0) && (message.length === 0)"
+                (click)="createPost()">Submit</button>
+        </div>
+    </div>
+    <div class="horiz right-aligned" *ngIf="!creating">
+        <button mat-raised-button (click)="creating = true">New Post</button>
+    </div>
+    <div *ngFor="let post of posts">
+        <app-post [post]="post" (dataChanged)="refreshData()"></app-post>
     </div>
 </div>
-<div class="horiz right-aligned" *ngIf="!creating">
-    <button mat-raised-button (click)="creating = true">New Post</button>
-</div>
-<div *ngFor="let post of posts">
-    <app-post [post]="post" (dataChanged)="refreshData()"></app-post>
-</div>
+<ng-template #profile>
+    <mat-progress-spinner *ngIf="profileLoading; else loaded"></mat-progress-spinner>
+    <ng-template #loaded>
+        <h2>Please fill in some extra info before you begin chatting:</h2>
+        <app-profile (dataChanged)="refreshUserProfile()"></app-profile>
+    </ng-template>
+</ng-template>

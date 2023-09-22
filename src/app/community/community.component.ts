@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
 import { AuthSession } from '@supabase/supabase-js';
+import { Profile } from '../profile/profile.component';
 
 @Component({
   selector: 'app-community',
@@ -13,82 +14,114 @@ export class CommunityComponent implements OnInit {
   creating = false;
   subject = '';
   message = '';
-  loading = false;
-  user: any;
+  postsLoading = false;
+  profileLoading = false;
+  user = this.supabase.user;
+  profile!: Profile;
+  tags: string[] = [];
 
-  session!: AuthSession;
-  constructor(private readonly supabase: SupabaseService) {
-    if (this.supabase.session) {
-      this.session = this.supabase.session
-    }
+  availableTags = availableTags;
+
+  // session!: AuthSession;
+  constructor(public readonly supabase: SupabaseService) {
+    // if (this.supabase.session) {
+    //   this.session = this.supabase.session
+    // }
   }
 
   async ngOnInit(): Promise<void> {
-    this.supabase.authChanges((_, session) => {
-      if (session)
-        this.session = session
-    })
-    await this.getPosts()
+    // this.supabase.authChanges((_, session) => {
+    //   if (session)
+    //     this.session = session
+    // })
+    await this.getPosts();
+  }
+
+  toggleIsTag(tag: string) {
+    if (this.tags?.includes(tag)) {
+      this.tags?.splice(this.tags?.indexOf(tag), 1);
+    } else {
+      this.tags?.push(tag);
+    }
   }
 
   async getPosts() {
+    this.profileLoading = true
     try {
-      this.loading = true
+      console.log('getting posts')
+      await this.supabase.refreshProfile();
+      console.log('got posts')
+      this.profile = { ...this.supabase.profile };
+      if (this.profile?.username) {
+        try {
+          this.postsLoading = true
 
-      const { user } = this.session
-      // console.log(user);
-      this.user = user;
-      let { data: data, error, status } = await this.supabase.getPosts()
+          // const { user } = this.session
+          // console.log(user);
+          // this.user = user;
+          let { data: data, error, status } = await this.supabase.getPosts()
 
-      // console.log(data, error, status);
+          // console.log(data, error, status);
 
-      if (error && status !== 406) {
-        throw error
-      }
-
-      // console.log(data);
-      if (data) {
-        this.rawPosts = data;
-        this.posts = [];
-        data.forEach((postRow: any) => {
-          const post = new Post();
-          post.id = postRow.id;
-          post.user_id = postRow.user_id;
-          post.thread_id = postRow.thread_id;
-          post.parent_id = postRow.parent_id;
-          post.posted_at = postRow.posted_at;
-          post.subject = postRow.subject;
-          post.message = postRow.message;
-          post.tags = postRow.tags?.split(',');
-          // console.log(postRow.id, postRow.votes)
-          Object.keys(postRow.votes).forEach((key: string) => {
-
-            // console.warn(key, postRow.votes[key])
-            const vote = new Vote();
-            vote.user_id = key;
-            vote.direction = postRow.votes[key];
-            post.votes.push(vote);
-          });
-          // console.log(post.id, post.votes);
-          if (!post.parent_id) {
-            this.posts.push(post);
-          } else {
-            const parentPost = this.findParent(this.posts, post);
-            // console.log(post.id, parentPost?.id);
-            parentPost?.responses.push(post);
+          if (error && status !== 406) {
+            throw error
           }
-        });
-        // console.log(data);
-        console.log(this.posts);
+
+          console.log(data);
+
+          // console.log(data);
+          if (data) {
+            this.rawPosts = data;
+            this.posts = [];
+            data.forEach((postRow: any) => {
+              const post = new Post();
+              post.id = postRow.id;
+              post.username = postRow.profiles?.username;
+              post.user_id = postRow.user_id;
+              post.thread_id = postRow.thread_id;
+              post.parent_id = postRow.parent_id;
+              post.posted_at = postRow.posted_at;
+              post.subject = postRow.subject;
+              post.message = postRow.message;
+              post.tags = postRow.tags?.split(',');
+              // console.log(postRow.id, postRow.votes)
+              Object.keys(postRow.votes).forEach((key: string) => {
+
+                // console.warn(key, postRow.votes[key])
+                const vote = new Vote();
+                vote.user_id = key;
+                vote.direction = postRow.votes[key];
+                post.votes.push(vote);
+              });
+              // console.log(post.id, post.votes);
+              if (!post.parent_id) {
+                this.posts.push(post);
+              } else {
+                const parentPost = this.findParent(this.posts, post);
+                // console.log(post.id, parentPost?.id);
+                parentPost?.responses.push(post);
+              }
+            });
+            // console.log(data);
+            console.log(this.posts);
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            console.error(error);
+          }
+        } finally {
+          this.postsLoading = false
+        }
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-    } finally {
-      // this.loading = false
+      console.error(error)
+    }
+    finally {
+      console.warn('posts finally')
+      this.profileLoading = false;
     }
   }
+
 
   async createPost() {
     if (this.message != '') {
@@ -96,6 +129,7 @@ export class CommunityComponent implements OnInit {
       post.subject = this.subject;
       post.message = this.message;
       post.user_id = this.user?.id;
+      post.tags = this.tags;
       console.log('upsert', post);
       this.creating = false;
       await this.supabase.createPost(post);
@@ -154,10 +188,15 @@ export class CommunityComponent implements OnInit {
       }
     });
   }
+
+  async refreshUserProfile() {
+    await this.getPosts();
+  }
 }
 
 export class Post {
   id!: number;
+  username!: string;
   user_id	!: string;
   thread_id	!: number;
   parent_id	!: number;
@@ -224,3 +263,6 @@ export class Vote {
   user_id!: string;
   direction!: number;
 }
+
+
+export const availableTags: string[] = ['General', 'Budgeting', 'Investing', 'Retirement', 'Taxes', 'Debt', 'Insurance', 'Estate Planning'];

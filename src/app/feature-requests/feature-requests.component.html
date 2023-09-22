@@ -1,0 +1,18 @@
+<h1>Request new features</h1>
+<div>
+    <mat-form-field>
+        <mat-label>New Feature</mat-label>
+        <textarea title="Message" [(ngModel)]="feature" matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+    <div class="horiz right-aligned">
+        <button mat-raised-button [disabled]="feature === ''" (click)="submitResponse()">Request Feature</button>
+    </div>
+</div>
+<div>
+    <div *ngFor="let feature of features">
+    </div>
+</div>
+<div>
+    Previous requests sorted decreasing
+</div>

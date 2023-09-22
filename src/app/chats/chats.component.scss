@@ -1,0 +1,21 @@
+.message {
+    border-radius: 8px;
+    width: 90%;
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2);
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    &.incoming {
+        background-color: rgb(162, 250, 194);;
+        color: black;
+        margin-left: 10px;
+    }
+}
+
+.chat {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2);
+}

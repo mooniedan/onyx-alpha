@@ -18,13 +18,20 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TextFieldModule } from '@angular/cdk/text-field';
 
+
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 import { NgxEchartsModule } from 'ngx-echarts';
 import { HttpClientModule } from '@angular/common/http';
 import { CommunityComponent } from './community/community.component';
 import { PostComponent } from './post/post.component';
+import { FeatureRequestsComponent } from './feature-requests/feature-requests.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ChatsComponent } from './chats/chats.component';
+import { OrderByPipe } from './order-by.pipe';
 
 @NgModule({
   declarations: [
@@ -33,7 +40,11 @@ import { PostComponent } from './post/post.component';
     FinanceInputComponent,
     DataInputComponent,
     CommunityComponent,
-    PostComponent
+    PostComponent,
+    FeatureRequestsComponent,
+    ProfileComponent,
+    ChatsComponent,
+    OrderByPipe
   ],
   imports: [
     BrowserModule,
@@ -56,7 +67,9 @@ import { PostComponent } from './post/post.component';
     MatTabsModule,
     MatAutocompleteModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
     TextFieldModule,
+    EditorModule,
     FormsModule,
     HttpClientModule,
     NgxEchartsModule.forRoot({
